@@ -1,17 +1,40 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Thu Jul 23 23:22:03 2020
+
+@author: simransetia
+This program is used to construct merged network of video transcripts and wiki articles.
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Jul 16 19:56:18 2020
 
 @author: simransetia
-This program is used to construct cooccurrence network of wiki articles.
+
 """
 import nltk
 import matplotlib.pyplot as plt
-f=open('/Users/simransetia/Documents/Dataset/JOCWIKI1/doc1/week1.txt')
+from w2vec import Gw2v
+from nltk.corpus import wordnet as wn
+from nltk.stem import WordNetLemmatizer, SnowballStemmer
+f=open('/Users/simransetia/Documents/Dataset/JOCWIKI1/doc1/week8.txt')
 corpus=f.readlines()
 
 
+def get_lemma(word):
+    lemma = wn.morphy(word)
+    if lemma is None:
+        #print("word"+word)
+        return word
+    else:
+        #print("lemma"+lemma)
+        return lemma
+    
+def get_lemma2(word):
+    return WordNetLemmatizer().lemmatize(word)
 def preprocessing(corpus):
     # initialize
     clean_text = []
@@ -23,6 +46,8 @@ def preprocessing(corpus):
         tokens = [token.lower() for token in tokens]
         # isword
         tokens = [token for token in tokens if token.isalpha()]
+        tokens = [get_lemma(token) for token in tokens]
+        tokens = [get_lemma2(token) for token in tokens]
         clean_sentence = ''
         clean_sentence = ' '.join(token for token in tokens)
         clean_text.append(clean_sentence)
@@ -56,9 +81,8 @@ nx.draw_networkx_labels(G,pos,namesd,font_size=6)
 
 
 import nltk
-f=open('/Users/simransetia/Documents/Dataset/video1.txt')
+f=open('/Users/simransetia/Documents/Dataset/video8.txt')
 corpus=f.readlines()
-
 
 def preprocessing(corpus):
     # initialize
@@ -71,6 +95,8 @@ def preprocessing(corpus):
         tokens = [token.lower() for token in tokens]
         # isword
         tokens = [token for token in tokens if token.isalpha()]
+        tokens = [get_lemma(token) for token in tokens]
+        tokens = [get_lemma2(token) for token in tokens]
         clean_sentence = ''
         clean_sentence = ' '.join(token for token in tokens)
         clean_text.append(clean_sentence)
@@ -110,126 +136,58 @@ nx.draw_networkx_labels(G1,pos2,namesd,font_size=6)
 #plt.show()
 
 #print(graph_tool.topology.mark_subgraph(G1, G))
-lda_videos=['right',
- 'programming',
- 'really',
- 'course',
- 'program',
- 'language',
- 'people',
- 'thing',
- 'question',
- 'learn',
- 'try',
- 'computer',
- 'start',
- 'water',
- 'piece',
- 'instructions',
- 'cookie',
- 'understand',
- 'think',
- 'written',
- 'getting',
- 'application',
+lda_article=['tuple',
+ 'index',
  'using',
- 'difficult',
- 'coffee']
-lda_article=['programming',
- 'instructions',
- 'computer',
- 'program',
- 'start',
- 'discourage',
- 'learn',
- 'understand',
- 'people',
- 'written',
- 'really',
- 'language',
- 'process',
- 'phone',
- 'piece',
- 'prerequisites',
+ 'sentiment',
+ 'install',
+ 'python',
+ 'image',
+ 'tuples',
+ 'available',
+ 'pointer',
+ 'procedure',
  'problem',
- 'specific']
-'''
-lda_article=['statement',
- 'download',
- 'python',
- 'spyder',
- 'click',
- 'variable',
- 'indentation',
- 'output',
- 'console',
- 'pane',
- 'write',
- 'execute',
- 'using',
- 'quote',
- 'input',
- 'please',
- 'installation',
- 'block',
- 'programming',
- 'instead',
- 'unchecked',
- 'program',
- 'value',
- 'watch',
- 'language',
- 'example',
- 'single',
- 'double',
- 'terminal',
- 'interpreter',
- 'properly',
- 'prototyping',
- 'otherwise',
+ 'printing',
  'print',
- 'press',
- 'present',
- 'platform',
- 'permanently',
- 'patient',
- 'package',
- 'option']
-lda_videos=['print',
- 'equal',
- 'answer',
- 'right',
- 'three',
- 'number',
- 'enter',
- 'python',
- 'time',
+ 'prediction',
+ 'string',
+ 'element',
+ 'account',
+ 'anagram',
+ 'create',
+ 'positive',
+ 'player']
+lda_videos=['count',
+ 'value',
+ 'anagram',
  'write',
- 'hello',
- 'become',
- 'display',
- 'something',
- 'execute',
- 'thing',
- 'command',
- 'please',
- 'happen',
- 'going',
- 'anaconda',
+ 'tuple',
+ 'image',
+ 'string',
+ 'print',
+ 'technique',
+ 'sentiment',
+ 'excel',
  'using',
- 'programming',
- 'correct',
- 'input',
+ 'positive',
+ 'example',
+ 'number',
+ 'equal',
+ 'thirty',
+ 'analysis',
+ 'happen',
+ 'sort',
+ 'ascii',
+ 'check',
+ 'information',
+ 'time',
+ 'seven',
+ 'store',
  'download',
- 'simply',
- 'understand',
- 'mean',
- 'whatever',
- 'variable',
- 'computer',
- 'sudarshan',
- 'start']
-'''
+ 'screen',
+ 'program']
+
 common=[]
 common1=[]
 labels={}
@@ -254,21 +212,20 @@ for each in lda_videos:
     labels1[names1.index(each)]=each
     common1.append(names1.index(each))
 
-for u,v in labels1.items():
-    if v in labels.values():
-        newlabels1[names1.index(v)]=v+" same"
-    else:
-        newlabels1[names1.index(v)]=v
-for u,v in labels.items():
-    if v in labels1.values():
-        newlabels[names.index(v)]=v+" same"
-    else:
-        newlabels[names.index(v)]=v
-
 H = G.subgraph(common)
-H=nx.relabel_nodes(H,newlabels)
-#H=nx.relabel_nodes(H,labels)
+H=nx.relabel_nodes(H,labels)
+#H=nx.relabel_nodes(H,labels,False)
 H1 = G1.subgraph(common1)  
-print(H1.nodes())
-H1=nx.relabel_nodes(H1,newlabels1)
-print(H1.nodes())
+H1=nx.relabel_nodes(H1,labels1)
+Hu=nx.Graph()
+Hu.add_edges_from(list(H1.edges())+list(H.edges()))
+Hu.add_nodes_from(list(H1.nodes(data=True))+list(H.nodes(data=True))) 
+Hu.remove_nodes_from(['positioning', 'press'])
+Huw=nx.Graph()
+Huw.add_edges_from(list(H1.edges())+list(Gw2v.edges()))
+Huw.add_nodes_from(list(H1.nodes(data=True))+list(Gw2v.nodes(data=True)))
+nx.write_gml(H,"H1.gml")
+nx.write_gml(H1,"H11.gml")
+nx.write_gml(Gw2v,"w2v1.gml")
+nx.write_gml(Hu,"Hu1.gml")
+nx.write_gml(Huw,"Huw1.gml")

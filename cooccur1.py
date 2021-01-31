@@ -4,7 +4,7 @@
 Created on Fri Jul 17 16:42:22 2020
 
 @author: simransetia
-This program is used to construct merged network of video transcripts and QnA forum.
+This program is used to construct cooccurrence network of QnA forum.
 """
 import nltk
 #f=open('/Users/simransetia/Documents/Dataset/video1.txt')

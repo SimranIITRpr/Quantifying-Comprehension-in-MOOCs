@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jul 16 19:56:18 2020
+Created on Fri Jul 24 15:44:58 2020
 
 @author: simransetia
-This program is used to construct cooccurrence network of wiki articles.
+This program is used to construct merged network of video transcripts and QnA forum.
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jul 17 16:42:22 2020
+
+@author: simransetia
 """
 import nltk
-import matplotlib.pyplot as plt
-f=open('/Users/simransetia/Documents/Dataset/JOCWIKI1/doc1/week1.txt')
+#f=open('/Users/simransetia/Documents/Dataset/video1.txt')
+f=open('/Users/simransetia/Documents/Dataset/JOCWIKI1/discuss/discussion11.txt')
 corpus=f.readlines()
 
 
@@ -53,10 +61,9 @@ import networkx as nx
 G=nx.from_numpy_matrix(Xc)
 pos = nx.spring_layout(G)
 nx.draw_networkx_labels(G,pos,namesd,font_size=6)
-
-
+#nx.draw(G1)
 import nltk
-f=open('/Users/simransetia/Documents/Dataset/video1.txt')
+f=open('/Users/simransetia/Documents/Dataset/video11.txt')
 corpus=f.readlines()
 
 
@@ -104,171 +111,71 @@ for k,v in pos2.items():
     # Shift the x values of every node by 10 to the right
     v[0] = v[0] +50
 nx.draw_networkx_labels(G1,pos2,namesd,font_size=6)
-
-#nx.draw(G)
-#nx.draw(G1)
-#plt.show()
-
-#print(graph_tool.topology.mark_subgraph(G1, G))
-lda_videos=['right',
- 'programming',
- 'really',
- 'course',
- 'program',
- 'language',
- 'people',
+lda_videos=['month',
+ 'check',
+ 'driver',
+ 'browser',
+ 'library',
+ 'particular',
  'thing',
- 'question',
- 'learn',
- 'try',
- 'computer',
- 'start',
- 'water',
- 'piece',
- 'instructions',
- 'cookie',
- 'understand',
- 'think',
- 'written',
- 'getting',
- 'application',
- 'using',
- 'difficult',
- 'coffee']
-lda_article=['programming',
- 'instructions',
- 'computer',
- 'program',
- 'start',
- 'discourage',
- 'learn',
- 'understand',
- 'people',
- 'written',
- 'really',
- 'language',
- 'process',
- 'phone',
- 'piece',
- 'prerequisites',
- 'problem',
- 'specific']
-'''
-lda_article=['statement',
- 'download',
- 'python',
- 'spyder',
- 'click',
- 'variable',
- 'indentation',
- 'output',
- 'console',
- 'pane',
- 'write',
- 'execute',
- 'using',
- 'quote',
  'input',
- 'please',
- 'installation',
- 'block',
- 'programming',
- 'instead',
- 'unchecked',
- 'program',
- 'value',
- 'watch',
- 'language',
- 'example',
- 'single',
- 'double',
- 'terminal',
- 'interpreter',
- 'properly',
- 'prototyping',
- 'otherwise',
- 'print',
- 'press',
- 'present',
- 'platform',
- 'permanently',
- 'patient',
- 'package',
- 'option']
-lda_videos=['print',
- 'equal',
- 'answer',
- 'right',
- 'three',
- 'number',
  'enter',
- 'python',
- 'time',
- 'write',
- 'hello',
- 'become',
- 'display',
- 'something',
- 'execute',
- 'thing',
- 'command',
- 'please',
- 'happen',
- 'going',
- 'anaconda',
+ 'thirty',
  'using',
+ 'python',
+ 'number',
+ 'thousand',
+ 'message',
+ 'search',
+ 'valid',
+ 'selenium',
+ 'given',
+ 'click',
+ 'august',
+ 'chrome',
+ 'seventy',
+ 'nineteen',
+ 'prominent',
+ 'purpose',
+ 'procedure',
+ 'proceed',
+ 'proceeding',
+ 'process',
+ 'processing',
+ 'program',
  'programming',
- 'correct',
- 'input',
- 'download',
- 'simply',
- 'understand',
- 'mean',
- 'whatever',
- 'variable',
- 'computer',
- 'sudarshan',
- 'start']
-'''
+ 'probably',
+ 'import',
+ 'calendar']
+lda_discuss=['question',
+ 'assignment',
+ 'answer',
+ 'webdriver',
+ 'option',
+ 'pattern',
+ 'perfect',
+ 'specific',
+ 'problem',
+ 'error',
+ 'browser']
 common=[]
 common1=[]
 labels={}
 labels1={}
-newlabels1={}
-newlabels={}
 i=0
-'''
-for each in lda_article:
-    for each1 in lda_videos:
-        if each==each1:
-            common.append(names.index(each))
-            common1.append(names1.index(each1))
-            labels[names.index(each)]=names
-            labels1[names1.index(each1)]=names.index(each)
-            i=i+1
-'''
-for each in lda_article:
+for each in lda_discuss:
     labels[names.index(each)]=each
     common.append(names.index(each))
 for each in lda_videos:
     labels1[names1.index(each)]=each
     common1.append(names1.index(each))
 
-for u,v in labels1.items():
-    if v in labels.values():
-        newlabels1[names1.index(v)]=v+" same"
-    else:
-        newlabels1[names1.index(v)]=v
-for u,v in labels.items():
-    if v in labels1.values():
-        newlabels[names.index(v)]=v+" same"
-    else:
-        newlabels[names.index(v)]=v
-
 H = G.subgraph(common)
-H=nx.relabel_nodes(H,newlabels)
-#H=nx.relabel_nodes(H,labels)
+H=nx.relabel_nodes(H,labels)
+#H=nx.relabel_nodes(H,labels,False)
 H1 = G1.subgraph(common1)  
-print(H1.nodes())
-H1=nx.relabel_nodes(H1,newlabels1)
-print(H1.nodes())
+H1=nx.relabel_nodes(H1,labels1)
+Hud=nx.Graph()
+Hud.add_edges_from(list(H1.edges())+list(H.edges()))
+Hud.remove_nodes_from(['press','ask'])
+Hud.add_nodes_from(list(H1.nodes(data=True))+list(H.nodes(data=True))) 
